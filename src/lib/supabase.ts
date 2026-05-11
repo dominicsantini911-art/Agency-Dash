@@ -1,4 +1,5 @@
 import { TableName, TableRow } from "@/lib/database.types";
+import { mockData } from "@/lib/data";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -21,7 +22,11 @@ export function getSupabaseEnvStatus() {
 }
 
 export async function selectTable<T extends TableName>(table: T): Promise<TableRow<T>[]> {
-  if (!hasSupabaseEnv()) return [];
+  if (!hasSupabaseEnv()) {
+    // Temporary local fallback for development: once Supabase env vars are configured,
+    // this mock data path is bypassed and live Supabase records are returned.
+    return mockData[table] as TableRow<T>[];
+  }
 
   const url = `${supabaseUrl}/rest/v1/${table}?select=*`;
   const response = await fetch(url, {
