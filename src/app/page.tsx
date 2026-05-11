@@ -1,8 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { kpis, performance, tasks } from "@/lib/data";
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 export default function DashboardPage() {
+  const maxSpend = Math.max(...performance.map((item) => item.spend));
+
   return (
     <div className="space-y-6">
       <div>
@@ -16,18 +17,20 @@ export default function DashboardPage() {
       </section>
       <Card>
         <CardHeader><CardTitle>Ad Spend vs ROAS</CardTitle></CardHeader>
-        <CardContent className="h-[320px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={performance}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis yAxisId="left" />
-              <YAxis yAxisId="right" orientation="right" />
-              <Tooltip />
-              <Line yAxisId="left" type="monotone" dataKey="spend" stroke="#2563eb" strokeWidth={2} />
-              <Line yAxisId="right" type="monotone" dataKey="roas" stroke="#16a34a" strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
+        <CardContent>
+          <div className="space-y-3">
+            {performance.map((item) => (
+              <div key={item.month} className="space-y-1">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium">{item.month}</span>
+                  <span className="text-muted-foreground">${item.spend.toLocaleString()} · ROAS {item.roas.toFixed(1)}x</span>
+                </div>
+                <div className="h-2 rounded-full bg-slate-100">
+                  <div className="h-2 rounded-full bg-blue-600" style={{ width: `${(item.spend / maxSpend) * 100}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
       <Card>
