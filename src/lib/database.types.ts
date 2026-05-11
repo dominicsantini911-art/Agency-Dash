@@ -58,8 +58,20 @@ export interface Database {
           created_at: string;
         };
       };
+      monthly_kpis: {
+        Row: {
+          id: string;
+          month: string;
+          revenue_cents: number;
+          active_campaigns: number;
+          new_leads: number;
+          open_invoices_cents: number;
+          created_at: string;
+        };
+      };
     };
   };
 }
 
-export type TableRow<T extends keyof Database["public"]["Tables"]> = Database["public"]["Tables"][T]["Row"];
+export type TableName = keyof Database["public"]["Tables"];
+export type TableRow<T extends TableName> = Database["public"]["Tables"][T]["Row"];

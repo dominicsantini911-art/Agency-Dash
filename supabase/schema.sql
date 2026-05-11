@@ -49,3 +49,13 @@ create table if not exists public.tasks (
   done boolean not null default false,
   created_at timestamptz not null default now()
 );
+
+create table if not exists public.monthly_kpis (
+  id uuid primary key default gen_random_uuid(),
+  month text not null unique,
+  revenue_cents integer not null default 0,
+  active_campaigns integer not null default 0,
+  new_leads integer not null default 0,
+  open_invoices_cents integer not null default 0,
+  created_at timestamptz not null default now()
+);
